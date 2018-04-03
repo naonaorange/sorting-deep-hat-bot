@@ -227,6 +227,8 @@ def handle_content_message(event):
     os.rename(tempfile_path, dist_path)
 
     img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
+    img_path = 'https' + img_path[4:]
+
     line_bot_api.reply_message(
         event.reply_token, [
             #TextSendMessage(text='Save content.'),
