@@ -302,8 +302,8 @@ def handle_beacon(event):
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, ssl_context='adhoc')
-#    app.run(host="0.0.0.0", port=port)
+#    app.run(host="0.0.0.0", port=port, ssl_context='adhoc')
+    app.run(host="0.0.0.0", port=port)
 #    app.run(host="127.0.0.1", port=port)
 #    arg_parser = ArgumentParser(
 #        usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
