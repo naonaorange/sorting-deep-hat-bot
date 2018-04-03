@@ -37,7 +37,8 @@ from linebot.models import (
     CarouselTemplate, CarouselColumn, PostbackEvent,
     StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
     ImageMessage, VideoMessage, AudioMessage, FileMessage,
-    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent
+    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent,
+    ImageSendMessage
 )
 
 app = Flask(__name__)
@@ -45,6 +46,7 @@ app = Flask(__name__)
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
 channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
+
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
     sys.exit(1)
@@ -224,11 +226,14 @@ def handle_content_message(event):
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
 
+    img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
     line_bot_api.reply_message(
         event.reply_token, [
-            TextSendMessage(text='Save content.'),
-            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+            #TextSendMessage(text='Save content.'),
+            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name)),
+            ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
         ])
+    
 
 
 @handler.add(MessageEvent, message=FileMessage)
@@ -246,7 +251,7 @@ def handle_file_message(event):
     line_bot_api.reply_message(
         event.reply_token, [
             TextSendMessage(text='Save file.'),
-            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name)),
         ])
 
 
@@ -297,7 +302,8 @@ def handle_beacon(event):
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    #app.run(host="0.0.0.0", port=port)
+    app.run(host="127.0.0.1", port=port)
 #    arg_parser = ArgumentParser(
 #        usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
 #    )
