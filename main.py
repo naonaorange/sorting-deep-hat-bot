@@ -232,7 +232,7 @@ def handle_content_message(event):
     line_bot_api.reply_message(
         event.reply_token, [
             #TextSendMessage(text='Save content.'),
-            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name)),
+            TextSendMessage(text=img_path),
             #ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
         ])
     
