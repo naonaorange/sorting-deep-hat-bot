@@ -43,6 +43,7 @@ from linebot.models import (
 
 #import sorting_deep_hat
 
+
 app = Flask(__name__)
 
 # get channel_secret and channel_access_token from your environment variable
