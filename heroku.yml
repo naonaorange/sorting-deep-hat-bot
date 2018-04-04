@@ -3,5 +3,7 @@ build:
     - python
   packages:
     - libopencv-dev
+    - libsm6
+    - libsm-dev
 run:
   web: python main.py
