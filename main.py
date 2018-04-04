@@ -41,6 +41,8 @@ from linebot.models import (
     ImageSendMessage
 )
 
+import sorting_deep_hat
+
 app = Flask(__name__)
 
 # get channel_secret and channel_access_token from your environment variable
@@ -226,6 +228,11 @@ def handle_content_message(event):
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
 
+    sdt = sorting_deep_hat.sorting_deep_hat()
+    face_rects = ()
+    house_names = []
+    sdt.estimate(os.path.join('static', 'tmp', dist_name), 'models/sorting_deep_hat.h5', os.path.join('static', 'tmp', dist_name), face_rects, house_names)
+
     img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
     img_path = 'https' + img_path[4:]
 
@@ -304,17 +311,5 @@ def handle_beacon(event):
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
-#    app.run(host="0.0.0.0", port=port, ssl_context='adhoc')
     app.run(host="0.0.0.0", port=port)
 #    app.run(host="127.0.0.1", port=port)
-#    arg_parser = ArgumentParser(
-#        usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
-#    )
-#    arg_parser.add_argument('-p', '--port', type=int, default=8000, help='port')
-#    arg_parser.add_argument('-d', '--debug', default=False, help='debug')
-#    options = arg_parser.parse_args()
-#
-#    # create tmp dir for download content
-#    make_static_tmp_dir()
-#
-#    app.run(debug=options.debug, port=options.port)
