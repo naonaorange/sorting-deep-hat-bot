@@ -3,8 +3,6 @@ build:
     - python
   packages:
     - libopencv-dev
-    - libsm6
-    - libsm-dev
-    - libxext6
+
 run:
   web: python main.py
