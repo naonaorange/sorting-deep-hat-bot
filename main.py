@@ -41,7 +41,7 @@ from linebot.models import (
     ImageSendMessage
 )
 
-#import sorting_deep_hat
+import sorting_deep_hat
 
 
 app = Flask(__name__)
@@ -229,10 +229,10 @@ def handle_content_message(event):
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
 
-#    sdt = sorting_deep_hat.sorting_deep_hat()
+    sdt = sorting_deep_hat.sorting_deep_hat()
     face_rects = ()
     house_names = []
-#    sdt.estimate(os.path.join('static', 'tmp', dist_name), 'models/sorting_deep_hat.h5', os.path.join('static', 'tmp', dist_name), face_rects, house_names)
+    sdt.estimate(os.path.join('static', 'tmp', dist_name), 'models/sorting_deep_hat.h5', os.path.join('static', 'tmp', dist_name), face_rects, house_names)
 
     img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
     img_path = 'https' + img_path[4:]
