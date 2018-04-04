@@ -1,2 +1,5 @@
 line-bot-sdk
 flask
+opencv-python
+tensorflow==1.5
+keras
