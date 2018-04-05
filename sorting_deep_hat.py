@@ -6,13 +6,15 @@ import numpy as np
 
 class sorting_deep_hat:
 
-    def estimate(self, input_image_path, model_path, output_image_path, face_rects, house_names):
+    def read_model(self, model_path):
+        self.model = load_model(model_path)
+        self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+    def estimate(self, input_image_path, output_image_path, face_rects, house_names):
         image = cv2.imread(input_image_path)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-        faces = face_cascade.detectMultiScale(gray, 1.1, 3)
+        faces = self.face_cascade.detectMultiScale(gray, 1.1, 3)
 
-        model = load_model(model_path)
         i = 0
         for (x, y, w, h) in faces:
             face_image = image[y:y+h, x:x+w]
@@ -22,7 +24,7 @@ class sorting_deep_hat:
             in_data = cv2.merge([r,g,b])
             in_data = np.array([in_data / 255.])
     
-            house = np.argmax(model.predict(in_data))
+            house = np.argmax(self.model.predict(in_data))
             if house == 0:
                 house_names.append('Glyffindor')
                 color = (0, 0, 255)
@@ -49,4 +51,5 @@ if __name__ == '__main__':
     houses = []
 
     sdt = sorting_deep_hat()
-    sdt.estimate(input_image_path, model_path, output_image_path, face_rects, houses)
+    sdt.read_model(model_path)
+    sdt.estimate(input_image_path, output_image_path, face_rects, houses)

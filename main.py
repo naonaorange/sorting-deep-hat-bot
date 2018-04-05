@@ -49,6 +49,9 @@ app = Flask(__name__)
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
 channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
+channel_secret = '08f51d634683078cccebdab1e4947567'
+channel_access_token = 'SR8NKDpDifwOXJ025lyHhXrzMWKaCP1ZKnKMO5OPINX5thAElMDL4RizT7XKD2fKCWH6zGAAQ7ZiKwEOeb3Gz4bM4qG6i+wmSygZf6k/btd2kw+OV7//B8tFSdEDQAvaFe0dluDmS4HJypkzYTYo1AdB04t89/1O/w1cDnyilFU='
+
 
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
@@ -61,6 +64,8 @@ line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+
+sdh = sorting_deep_hat.sorting_deep_hat()
 
 
 # function for create tmp dir for download content
@@ -229,22 +234,23 @@ def handle_content_message(event):
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
 
-    sdt = sorting_deep_hat.sorting_deep_hat()
     face_rects = ()
     house_names = []
-    sdt.estimate(os.path.join('static', 'tmp', dist_name), 'models/sorting_deep_hat.h5', os.path.join('static', 'tmp', dist_name), face_rects, house_names)
+    sdh.estimate(\
+        os.path.join('static', 'tmp', dist_name),\
+        os.path.join('static', 'tmp', dist_name),\
+        face_rects, house_names)
 
     img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
-    img_path = 'https' + img_path[4:]
+    img_path = 'https' + img_path[4:] # http -> https
 
-    line_bot_api.reply_message(
-        event.reply_token, [
-            #TextSendMessage(text='Save content.'),
-            #TextSendMessage(text=img_path),
-            ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
-        ])
-    
-
+    if len(face_rects) == 0:
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='顔が写っている画像を載せてください'))
+    else:
+        line_bot_api.reply_message(
+            event.reply_token, [
+                ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
+            ])
 
 @handler.add(MessageEvent, message=FileMessage)
 def handle_file_message(event):
@@ -311,6 +317,7 @@ def handle_beacon(event):
 
 
 if __name__ == "__main__":
+    sdh.read_model('models/sorting_deep_hat.h5')
     port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
-#    app.run(host="127.0.0.1", port=port)
+#    app.run(host="0.0.0.0", port=port)
+    app.run(host="127.0.0.1", port=port)
