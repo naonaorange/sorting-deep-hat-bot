@@ -10,13 +10,13 @@ class sorting_deep_hat:
         self.model = load_model(model_path)
         self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
-    def estimate(self, input_image_path, output_image_path, face_rects, house_names):
+    def estimate(self, input_image_path, output_image_path):
         image = cv2.imread(input_image_path)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        faces = self.face_cascade.detectMultiScale(gray, 1.1, 3)
+        face_rects = self.face_cascade.detectMultiScale(gray, 1.1, 3, minSize=(1,1))
 
         i = 0
-        for (x, y, w, h) in faces:
+        for (x, y, w, h) in face_rects:
             face_image = image[y:y+h, x:x+w]
             face_image = cv2.resize(face_image, (100, 100))
     
@@ -25,6 +25,8 @@ class sorting_deep_hat:
             in_data = np.array([in_data / 255.])
     
             house = np.argmax(self.model.predict(in_data))
+
+            house_names = []
             if house == 0:
                 house_names.append('Glyffindor')
                 color = (0, 0, 255)
@@ -42,14 +44,15 @@ class sorting_deep_hat:
             cv2.putText(image, house_names[i], (x, y), cv2.FONT_HERSHEY_PLAIN, 2, color, 4)
             cv2.imwrite(output_image_path, image)
             i += 1
+
         
 if __name__ == '__main__':
     model_path = 'models/sorting_deep_hat.h5'
-    input_image_path = 'data/sample/harrypotter.jpg'
+    input_image_path = 'harrypotter.jpg'
     output_image_path = 'output.jpg'
     face_rects = ()
     houses = []
 
     sdt = sorting_deep_hat()
     sdt.read_model(model_path)
-    sdt.estimate(input_image_path, output_image_path, face_rects, houses)
+    face_rects, house_names = sdt.estimate(input_image_path, output_image_path)
