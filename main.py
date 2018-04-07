@@ -30,15 +30,15 @@ from linebot.exceptions import (
 )
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
-    SourceUser, SourceGroup, SourceRoom,
-    TemplateSendMessage, ConfirmTemplate, MessageTemplateAction,
+#    SourceUser, SourceGroup, SourceRoom,
+#    TemplateSendMessage, ConfirmTemplate, MessageTemplateAction,
 #    ButtonsTemplate, ImageCarouselTemplate, ImageCarouselColumn, URITemplateAction,
 #    PostbackTemplateAction, DatetimePickerTemplateAction,
 #    CarouselTemplate, CarouselColumn, PostbackEvent,
 #    StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
-    ImageMessage, VideoMessage, AudioMessage, FileMessage,
+#    ImageMessage, VideoMessage, AudioMessage, FileMessage,
     ImageMessage,
-    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent,
+#    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent,
     FollowEvent, JoinEvent,
     ImageSendMessage
 )
