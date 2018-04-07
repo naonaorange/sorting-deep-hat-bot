@@ -13,10 +13,14 @@ class sorting_deep_hat:
     def estimate(self, input_image_path, output_image_path):
         image = cv2.imread(input_image_path)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        face_rects = self.face_cascade.detectMultiScale(gray, 1.1, 3, minSize=(1,1))
+        face_rects = self.face_cascade.detectMultiScale(gray, 1.1, 1, minSize=(30, 30))
+        print(image.shape)
+        print(face_rects)
 
         i = 0
-        for (x, y, w, h) in face_rects:
+        ret = []
+
+        for x, y, w, h in face_rects:
             face_image = image[y:y+h, x:x+w]
             face_image = cv2.resize(face_image, (100, 100))
     
@@ -26,24 +30,26 @@ class sorting_deep_hat:
     
             house = np.argmax(self.model.predict(in_data))
 
-            house_names = []
             if house == 0:
-                house_names.append('Glyffindor')
+                house_names = 'Glyffindor'
                 color = (0, 0, 255)
             elif house == 1:
-                house_names.append('Hufflpuff')
+                house_names = 'Hufflpuff'
                 color = (0, 255, 255)
             elif house == 2:
-                house_names.append('Ravenclaw')
+                house_names = 'Ravenclaw'
                 color = (255, 0, 0)
             elif house == 3:
-                house_names.append('Slytherin')
+                house_names = 'Slytherin'
                 color = (0, 255, 0)
     
             cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(image, house_names[i], (x, y), cv2.FONT_HERSHEY_PLAIN, 2, color, 4)
+            cv2.putText(image, house_names, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, color, 4)
             cv2.imwrite(output_image_path, image)
+
+            ret.append([x, y, w, h, house_names])
             i += 1
+        return ret
 
         
 if __name__ == '__main__':

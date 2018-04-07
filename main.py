@@ -32,12 +32,14 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
     SourceUser, SourceGroup, SourceRoom,
     TemplateSendMessage, ConfirmTemplate, MessageTemplateAction,
-    ButtonsTemplate, ImageCarouselTemplate, ImageCarouselColumn, URITemplateAction,
-    PostbackTemplateAction, DatetimePickerTemplateAction,
-    CarouselTemplate, CarouselColumn, PostbackEvent,
-    StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
+#    ButtonsTemplate, ImageCarouselTemplate, ImageCarouselColumn, URITemplateAction,
+#    PostbackTemplateAction, DatetimePickerTemplateAction,
+#    CarouselTemplate, CarouselColumn, PostbackEvent,
+#    StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
     ImageMessage, VideoMessage, AudioMessage, FileMessage,
+    ImageMessage,
     UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent,
+    FollowEvent, JoinEvent,
     ImageSendMessage
 )
 
@@ -49,7 +51,6 @@ app = Flask(__name__)
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
 channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
-
 
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
@@ -107,9 +108,10 @@ def handle_content_message(event):
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
 
-    sdh.estimate(\
+    result = sdh.estimate(\
         os.path.join('static', 'tmp', dist_name),\
         os.path.join('static', 'tmp', dist_name))
+    print(result)
 
     img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
     img_path = 'https' + img_path[4:] # http -> https
