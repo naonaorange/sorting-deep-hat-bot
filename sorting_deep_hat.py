@@ -13,7 +13,13 @@ class sorting_deep_hat:
     def estimate(self, input_image_path, output_image_path):
         image = cv2.imread(input_image_path)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        face_rects = self.face_cascade.detectMultiScale(gray, 1.1, 1, minSize=(30, 30))
+
+        face_rects = face_cascade.detectMultiScale(\
+            gray,\
+            scaleFactor= 1.1,\
+            minNeighbors= 5,\
+            minSize=(100, 100))
+
         i = 0
         ret = []
 
