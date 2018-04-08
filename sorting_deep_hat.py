@@ -14,7 +14,7 @@ class sorting_deep_hat:
         image = cv2.imread(input_image_path)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        face_rects = face_cascade.detectMultiScale(\
+        face_rects = self.face_cascade.detectMultiScale(\
             gray,\
             scaleFactor= 1.1,\
             minNeighbors= 5,\

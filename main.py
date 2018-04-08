@@ -30,16 +30,7 @@ from linebot.exceptions import (
 )
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
-#    SourceUser, SourceGroup, SourceRoom,
-#    TemplateSendMessage, ConfirmTemplate, MessageTemplateAction,
-#    ButtonsTemplate, ImageCarouselTemplate, ImageCarouselColumn, URITemplateAction,
-#    PostbackTemplateAction, DatetimePickerTemplateAction,
-#    CarouselTemplate, CarouselColumn, PostbackEvent,
-#    StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
-#    ImageMessage, VideoMessage, AudioMessage, FileMessage,
-    ImageMessage,
-#    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent,
-    FollowEvent, JoinEvent,
+    ImageMessage, FollowEvent, JoinEvent,
     ImageSendMessage
 )
 
@@ -51,6 +42,7 @@ app = Flask(__name__)
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
 channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
+
 
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
@@ -113,13 +105,37 @@ def handle_content_message(event):
         os.path.join('static', 'tmp', dist_name))
     print(result)
 
-    img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
-    img_path = 'https' + img_path[4:] # http -> https
 
-    line_bot_api.reply_message(
-        event.reply_token, [
-            ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
-        ])
+    if len(result) == 0:
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text='顔が大きく写る写真を使って、\n帽子をかぶりなおすのじゃ')
+            ])
+    else:
+        img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
+        img_path = 'https' + img_path[4:] # http -> https
+    
+        t = ''
+        i = 0
+        for r in result:
+            if r[4] == 'Glyffindor':
+                t += 'グリフィンドール !!'
+            elif r[4] == 'Hufflpuff':
+                t += 'ハッフルパフ !!'
+            elif r[4] == 'Ravenclaw':
+                t += 'レイブンクロー !!'
+            elif r[4] == 'Slytherin':
+                t += 'スリザリン !!'
+            
+            if i < len(result) - 1:
+                t += '\n'
+            i += 1
+
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text=t),
+                ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
+            ])
 
 @handler.add(FollowEvent)
 def handle_follow(event):
