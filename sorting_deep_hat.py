@@ -18,7 +18,7 @@ class sorting_deep_hat:
             gray,\
             scaleFactor= 1.1,\
             minNeighbors= 5,\
-            minSize=(100, 100))
+            minSize=(70, 70))
 
         i = 0
         ret = []
