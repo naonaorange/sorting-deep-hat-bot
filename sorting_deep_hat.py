@@ -17,8 +17,8 @@ class sorting_deep_hat:
         face_rects = self.face_cascade.detectMultiScale(\
             gray,\
             scaleFactor= 1.1,\
-            minNeighbors= 5,\
-            minSize=(70, 70))
+            minNeighbors= 3,\
+            minSize=(50, 50))
 
         i = 0
         ret = []
