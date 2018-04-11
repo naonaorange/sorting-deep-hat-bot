@@ -18,11 +18,10 @@ class sorting_deep_hat:
             gray,\
             scaleFactor= 1.1,\
             minNeighbors= 3,\
-            minSize=(50, 50))
+            minSize=(70, 70))
 
         i = 0
         ret = []
-
         for x, y, w, h in face_rects:
             face_image = image[y:y+h, x:x+w]
             face_image = cv2.resize(face_image, (100, 100))
