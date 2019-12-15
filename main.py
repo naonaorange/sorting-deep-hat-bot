@@ -103,7 +103,7 @@ def handle_content_message(event):
     line_bot_api.reply_message(
         event.reply_token, [
             TextSendMessage(text='tempfile_path\n' + tempfile_path),
-            TextSendMessage(text='dist_path\n' + dist_path)
+            TextSendMessage(text='dist_path\n' + dist_path),
             TextSendMessage(text='dist_name\n' + dist_name)
         ])
 
