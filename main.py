@@ -87,65 +87,63 @@ def handle_text_message(event):
 def handle_content_message(event):
     if not isinstance(event.message, ImageMessage):
         return
-    ext = 'jpg'
 
     message_content = line_bot_api.get_message_content(event.message.id)
-
+    ext = 'jpg'
+	
     #Create the temp file to save the input file.
     with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
         for chunk in message_content.iter_content():
             tf.write(chunk)
+
         tempfile_path = tf.name
+        dist_path = tf.name + '.' + ext
+        dist_name = os.path.basename(dist_path)
 
-    dist_path = tempfile_path + '.' + ext
-    dist_name = os.path.basename(dist_path)
-
-    line_bot_api.reply_message(
-        event.reply_token, [
-            TextSendMessage(text='tempfile_path\n' + tempfile_path),
-            TextSendMessage(text='dist_path\n' + dist_path),
-            TextSendMessage(text='dist_name\n' + dist_name)
-        ])
-
-    os.rename(tempfile_path, dist_path)
-
-    result = sdh.estimate(\
-        os.path.join('static', 'tmp', dist_name),\
-        os.path.join('static', 'tmp', dist_name))
-
-    line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='os path join\n' + os.path.join('static', 'tmp', dist_name))])
-
-
-    if len(result) == 0:
         line_bot_api.reply_message(
             event.reply_token, [
-                TextSendMessage(text='顔が大きく写る写真を使って、\n帽子をかぶりなおすのじゃ')
+                TextSendMessage(text='tempfile_path\n' + tempfile_path),
+                TextSendMessage(text='dist_path\n' + dist_path),
+                TextSendMessage(text='dist_name\n' + dist_name)
             ])
-    else:
-        img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
-        img_path = 'https' + img_path[4:] # http -> https
+
+        os.rename(tempfile_path, dist_path)
+
+        result = sdh.estimate(\
+            os.path.join('static', 'tmp', dist_name),\
+            os.path.join('static', 'tmp', dist_name))
+
+
+        if len(result) == 0:
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text='顔が大きく写る写真を使って、\n帽子をかぶりなおすのじゃ')
+                ])
+        else:
+            img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
+            img_path = 'https' + img_path[4:] # http -> https
     
-        t = ''
-        i = 0
-        for r in result:
-            if r[4] == 'Glyffindor':
-                t += 'グリフィンドール !!'
-            elif r[4] == 'Hufflpuff':
-                t += 'ハッフルパフ !!'
-            elif r[4] == 'Ravenclaw':
-                t += 'レイブンクロー !!'
-            elif r[4] == 'Slytherin':
-                t += 'スリザリン !!'
+            t = ''
+            i = 0
+            for r in result:
+                if r[4] == 'Glyffindor':
+                    t += 'グリフィンドール !!'
+                elif r[4] == 'Hufflpuff':
+                    t += 'ハッフルパフ !!'
+                elif r[4] == 'Ravenclaw':
+                    t += 'レイブンクロー !!'
+                elif r[4] == 'Slytherin':
+                    t += 'スリザリン !!'
             
-            if i < len(result) - 1:
-                t += '\n'
-            i += 1
+                if i < len(result) - 1:
+                    t += '\n'
+                i += 1
 
-        line_bot_api.reply_message(
-            event.reply_token, [
-                TextSendMessage(text=t),
-                ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
-            ])
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text=t),
+                    ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
+                ])
 
 @handler.add(FollowEvent)
 def handle_follow(event):
