@@ -80,7 +80,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text=event.message.text))
+        event.reply_token, TextSendMessage(text=event.message.text+'\nv1.0'))
 
 # Other Message Type
 @handler.add(MessageEvent, message=ImageMessage)
