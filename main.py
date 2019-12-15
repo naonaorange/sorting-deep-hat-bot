@@ -96,19 +96,24 @@ def handle_content_message(event):
         for chunk in message_content.iter_content():
             tf.write(chunk)
         tempfile_path = tf.name
-        line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='tempfile_path\n' + tempfile_path)])
 
     dist_path = tempfile_path + '.' + ext
     dist_name = os.path.basename(dist_path)
-    line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='dist_path\n' + dist_path)])
-    line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='dist_name\n' + dist_name)])
+
+    line_bot_api.reply_message(
+        event.reply_token, [
+            TextSendMessage(text='tempfile_path\n' + tempfile_path),
+            TextSendMessage(text='dist_path\n' + dist_path)
+            TextSendMessage(text='dist_name\n' + dist_name)
+        ])
 
     os.rename(tempfile_path, dist_path)
 
     result = sdh.estimate(\
         os.path.join('static', 'tmp', dist_name),\
         os.path.join('static', 'tmp', dist_name))
-    print(result)
+
+    line_bot_api.reply_message(event.reply_token, [TextSendMessage(text='os path join\n' + os.path.join('static', 'tmp', dist_name))])
 
 
     if len(result) == 0:
