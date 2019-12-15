@@ -8,6 +8,7 @@ class sorting_deep_hat:
 
     def read_model(self, model_path):
         self.model = load_model(model_path)
+        self.model._make_predict_function()
         self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
     def estimate(self, input_image_path, output_image_path):
