@@ -100,13 +100,6 @@ def handle_content_message(event):
         dist_path = tf.name + '.' + ext
         dist_name = os.path.basename(dist_path)
 
-        line_bot_api.reply_message(
-            event.reply_token, [
-                TextSendMessage(text='tempfile_path\n' + tempfile_path),
-                TextSendMessage(text='dist_path\n' + dist_path),
-                TextSendMessage(text='dist_name\n' + dist_name)
-            ])
-
         os.rename(tempfile_path, dist_path)
 
         result = sdh.estimate(\
@@ -141,6 +134,9 @@ def handle_content_message(event):
 
             line_bot_api.reply_message(
                 event.reply_token, [
+                    TextSendMessage(text='tempfile_path\n' + tempfile_path),
+                    TextSendMessage(text='dist_path\n' + dist_path),
+                    TextSendMessage(text='dist_name\n' + dist_name),
                     TextSendMessage(text=t),
                     ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
                 ])
