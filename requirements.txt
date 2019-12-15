@@ -1,6 +1,6 @@
 line-bot-sdk
 flask
 opencv-python
-tensorflow==1.5
+tensorflow==1.12.2
 keras==2.1.5
 h5py
