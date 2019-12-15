@@ -86,11 +86,12 @@ def handle_text_message(event):
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_content_message(event):
     if not isinstance(event.message, ImageMessage):
-		return
-    
-	ext = 'jpg'
+        return
+    ext = 'jpg'
 
     message_content = line_bot_api.get_message_content(event.message.id)
+
+    #Create the temp file to save the input file.
     with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
         for chunk in message_content.iter_content():
             tf.write(chunk)
