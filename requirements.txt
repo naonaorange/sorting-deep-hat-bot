@@ -1,6 +1,7 @@
 line-bot-sdk
 flask
-opencv-python
-tensorflow==1.5
-keras==2.1.5
+numpy==1.17.4
+tensorflow==2.0.0
+opencv-python==4.1.2
+pillow
 h5py
