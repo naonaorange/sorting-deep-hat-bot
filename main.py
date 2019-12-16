@@ -35,7 +35,7 @@ from linebot.models import (
 )
 
 import sorting_deep_hat
-
+import time
 
 app = Flask(__name__)
 
@@ -126,6 +126,7 @@ def handle_content_message(event):
                         TextSendMessage(text=img_path),
                         ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
                     ])
+            time.sleep(1)
 
 @handler.add(FollowEvent)
 def handle_follow(event):
