@@ -112,9 +112,13 @@ def handle_content_message(event):
         sdh.draw(img_path)
 
         house_names = ''
+        i = 0
         for (x, y, w, h, hn) in sdh.result_data:
             house_names += sdh.get_house_name_in_japanese(hn)
-            house_names += '!\n'
+            house_names += ' !'
+            if i < len(sdh.result_data) - 1:
+                house_names += '\n'
+            i += 1
 
         img_url = request.host_url + img_path
         img_url = 'https' + img_url[4:] # http -> https
