@@ -123,9 +123,8 @@ def handle_content_message(event):
                         #TextSendMessage(text='dist_path\n' + dist_path),
                         #TextSendMessage(text='dist_name\n' + dist_name),
                         TextSendMessage(text=input_img.name),
-                        TextSendMessage(text=output_img.name),
-                        TextSendMessage(text=img_path)
-                        #ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
+                        TextSendMessage(text=img_path),
+                        ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
                     ])
 
 @handler.add(FollowEvent)
