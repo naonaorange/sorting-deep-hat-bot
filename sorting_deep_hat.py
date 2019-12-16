@@ -89,8 +89,8 @@ class sorting_deep_hat:
             #    text_draw_y = 0
             #pil_draw.text((x, text_draw_y), house_name, fill=color, font=self.font)
 
-            cv2.rectangle(self.image, (x, y), (x + w, y + h), (0,0,255), 2)
-            cv2.putText(self.image, house_name, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,255), 4)
+            #cv2.rectangle(self.image, (x, y), (x + w, y + h), (0,0,255), 2)
+            #cv2.putText(self.image, hn, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,255), 4)
         
         #pil_image.save(output_image_path)
         #pil_image.close()
