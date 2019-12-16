@@ -101,34 +101,37 @@ def handle_content_message(event):
         img_path = os.path.join('static', 'tmp', img_name)
         os.rename(tf.name, img_path)
 
-        sdh.estimate(img_path)
+    sdh.estimate(img_path)
 
-        if len(sdh.result_data) == 0:
-            line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(text='顔が大きく写る写真を使って、\n帽子をかぶりなおすのじゃ')
-            ]   )
-        else:
-            sdh.draw(img_path)
+    if len(sdh.result_data) == 0:
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text='別の画像を送ってください。\n例えば、写っている顔が小さい場合は判断できない場合があります。')
+        ]   )
+    else:
+        sdh.draw(img_path)
 
-            house_names = ''
-            for (x, y, w, h, hn) in sdh.result_data:
-                house_names += sdh.get_house_name_in_japanese(hn)
-                house_names += '!\n'
+        house_names = ''
+        for (x, y, w, h, hn) in sdh.result_data:
+            house_names += sdh.get_house_name_in_japanese(hn)
+            house_names += '!\n'
 
-            img_url = request.host_url + img_path
-            img_url = 'https' + img_url[4:] # http -> https
+        img_url = request.host_url + img_path
+        img_url = 'https' + img_url[4:] # http -> https
 
-            line_bot_api.reply_message(
-                event.reply_token, [
-                TextSendMessage(text=house_names),
-                ImageSendMessage(original_content_url=img_url, preview_image_url=img_url)
-            ])
+        line_bot_api.reply_message(
+            event.reply_token, [
+            TextSendMessage(text=house_names),
+            ImageSendMessage(original_content_url=img_url, preview_image_url=img_url)
+        ])
 
 @handler.add(FollowEvent)
 def handle_follow(event):
     line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text='フォローありがとうございます。\n顔が写っている画像を送ると、どの寮に入れるかが分かります！'))
+        event.reply_token, TextSendMessage(text='フォローありがとうございます。\n\
+                                            顔が写っている画像を送ると、どの寮に入れるかが分かります！\
+                                            グリフィンドール・ハッフルパプ・レイブンクロー・スリザリン\n\
+                                            あなたはどの寮に入るかな？'))
 
 
 if __name__ == "__main__":
