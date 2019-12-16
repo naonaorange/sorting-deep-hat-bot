@@ -128,6 +128,8 @@ def handle_content_message(event):
             TextSendMessage(text=house_names),
             ImageSendMessage(original_content_url=img_url, preview_image_url=img_url)
         ])
+        
+    sdh.release_internal_data()
 
 @handler.add(FollowEvent)
 def handle_follow(event):
