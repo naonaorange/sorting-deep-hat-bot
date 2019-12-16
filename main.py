@@ -104,7 +104,7 @@ def handle_content_message(event):
 
         sdh.estimate(os.path.join('static', 'tmp', dist_name))
 
-        if len(sdt.result_data) == 0:
+        if len(sdh.result_data) == 0:
             line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(text='顔が大きく写る写真を使って、\n帽子をかぶりなおすのじゃ')
