@@ -26,7 +26,7 @@ class sorting_deep_hat:
         faces = self.face_cascade.detectMultiScale(gray,\
                                                     scaleFactor= 1.11,\
                                                     minNeighbors= 3,\
-                                                    #minSize=(70, 70)\
+                                                    minSize=(self.image.shape[1] // 8, self.image.shape[0] // 8)\
                                                     )
 
         self.result_data = []
@@ -81,8 +81,8 @@ class sorting_deep_hat:
 
             #矩形の横幅の長さに文字が収まるようにフォントサイズを調整
             font_size = w // 8 #グリフィンドールが8文字
-            if font_size < 10:
-                font_size = 10
+            if font_size < 15:
+                font_size = 15
             font = ImageFont.truetype('SourceHanSansJP-Bold.otf', font_size)
 
             #文字が矩形と重なってしまうため、矩形の幅と文字の大きさを考慮して位置を決定
