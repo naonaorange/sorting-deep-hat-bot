@@ -26,7 +26,7 @@ class sorting_deep_hat:
         faces = self.face_cascade.detectMultiScale(gray,\
                                                     scaleFactor= 1.11,\
                                                     minNeighbors= 4,\
-                                                    minSize=(self.image.shape[1] // 6, self.image.shape[0] // 6)\
+                                                    minSize=(self.image.shape[1] // 8, self.image.shape[0] // 8)\
                                                     )
 
         self.result_data = []
