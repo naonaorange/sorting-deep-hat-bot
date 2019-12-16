@@ -80,7 +80,9 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text=event.message.text))
+        #event.reply_token, TextSendMessage(text=event.message.text)
+        event.reply_token, TextSendMessage(text='顔が写っている画像を送ると、どの寮に入れるか分かります！')
+        )
 
 # Other Message Type
 @handler.add(MessageEvent, message=ImageMessage)
@@ -95,12 +97,11 @@ def handle_content_message(event):
         for chunk in message_content.iter_content():
             tf.write(chunk)
     
-        dist_path = tf.name + '.jpg'
-        dist_name = os.path.basename(dist_path)
-        dist_path = os.path.join('static', 'tmp', dist_name)
-        os.rename(tf.name, dist_path)
+        img_name = os.path.basename(tf.name) + '.jpg'
+        img_path = os.path.join('static', 'tmp', img_name)
+        os.rename(tf.name, img_path)
 
-    sdh.estimate(os.path.join('static', 'tmp', dist_name))
+    sdh.estimate(img_path)
 
     if len(sdh.result_data) == 0:
         line_bot_api.reply_message(
@@ -108,21 +109,19 @@ def handle_content_message(event):
                 TextSendMessage(text='顔が大きく写る写真を使って、\n帽子をかぶりなおすのじゃ')
             ])
     else:
-        #sdh.draw(output_img.name)
-        sdh.draw(os.path.join('static', 'tmp', dist_name))
+        sdh.draw(img_path)
 
-        img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
-        img_path = 'https' + img_path[4:] # http -> https
+        img_url = request.host_url + img_path
+        img_url = 'https' + img_url[4:] # http -> https
 
         line_bot_api.reply_message(
             event.reply_token, [
                 #TextSendMessage(text='tempfile_path\n' + tempfile_path),
-                TextSendMessage(text='dist_path\n' + dist_path),
                 #TextSendMessage(text='dist_name\n' + dist_name),
-                TextSendMessage(text=os.path.join('static', 'tmp', dist_name)),
                 TextSendMessage(text=img_path),
+                TextSendMessage(text=img_url),
                 #ImageSendMessage(original_content_url=img_path2, preview_image_url=img_path2),
-                ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
+                ImageSendMessage(original_content_url=img_url, preview_image_url=img_url)
             ])
 
 @handler.add(FollowEvent)
