@@ -117,6 +117,10 @@ def handle_content_message(event):
                 img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
                 img_path = 'https' + img_path[4:] # http -> https
 
+                dist_name2 = os.path.basename(input_img.name)
+                img_path2 = request.host_url + os.path.join('static', 'tmp', dist_name2)
+                img_path2 = 'https' + img_path2[4:] # http -> https
+
                 line_bot_api.reply_message(
                     event.reply_token, [
                         #TextSendMessage(text='tempfile_path\n' + tempfile_path),
@@ -124,6 +128,7 @@ def handle_content_message(event):
                         #TextSendMessage(text='dist_name\n' + dist_name),
                         TextSendMessage(text=input_img.name),
                         TextSendMessage(text=img_path),
+                        ImageSendMessage(original_content_url=img_path2, preview_image_url=img_path2),
                         ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
                     ])
             time.sleep(1)
