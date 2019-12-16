@@ -1,8 +1,7 @@
-pip>=19.3.1
 line-bot-sdk
 flask
 numpy==1.17.4
-tensorflow==2.0.0
+tensorflow==2.0.0b1
 opencv-python==4.1.2
 pillow
 h5py
