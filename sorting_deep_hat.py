@@ -12,7 +12,7 @@ class sorting_deep_hat:
         #self.model_path = model_path
         self.font_size = 19
         self.rectangle_width = 5
-        self.font = ImageFont.truetype('SourceHanSansJP-Bold.otf', self.font_size)
+        #self.font = ImageFont.truetype('SourceHanSansJP-Bold.otf', self.font_size)
 
     def release_internal_data(self):
         if self.image is not None:
@@ -66,38 +66,41 @@ class sorting_deep_hat:
         #pil_image=Image.fromarray(self.image[:, :, ::-1].copy())
         #pil_draw = ImageDraw.Draw(pil_image)
 
-        for (x, y, w, h, hn) in self.result_data:
-            color = ()
-            if hn == 'Glyffindor':
-                color = 'red'
-                house_name = 'グリフィンドール'
-            elif hn == 'Hufflpuff':
-                color = 'orange'
-                house_name = 'ハッフルパフ'
-            elif hn == 'Ravenclaw':
-                color = 'blue'
-                house_name = 'レイブンクロー'
-            elif hn == 'Slytherin':
-                color = 'green'
-                house_name = 'スリザリン'
+        for (x, y, w, h, house_name) in self.result_data:
+            if house_name == 'Glyffindor':
+                color = (0, 0, 255)
+            elif house_name == 'Hufflpuff':
+                color = (0, 255, 255)
+            elif house_name == 'Ravenclaw':
+                color = (255, 0, 0)
+            elif house_name == 'Slytherin':
+                color = (0, 255, 0)
 
             #pil_draw.rectangle([(x, y), (x+w, y+h)], outline=color,  width=self.rectangle_width)
-            
             #文字が矩形と重なってしまうため、矩形の幅と文字の大きさを考慮して位置を決定
             #text_draw_y = y - self.font_size - self.rectangle_width - 1 
             #if text_draw_y < 0:
             #    text_draw_y = 0
             #pil_draw.text((x, text_draw_y), house_name, fill=color, font=self.font)
 
-            cv2.rectangle(self.image, (x, y), (x + w, y + h), (0,0,255), 2)
-            cv2.putText(self.image, hn, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,255), 4)
+            cv2.rectangle(self.image, (x, y), (x + w, y + h), color, 2)
+            cv2.putText(self.image, house_name, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, color, 4)
         
         #pil_image.save(output_image_path)
         #pil_image.close()
 
-        #cv2.rectangle(self.image, (x, y), (x + w, y + h), color, 2)
-        #cv2.putText(self.image, house_name, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, color, 4)
         cv2.imwrite(output_image_path, self.image)
+    
+    def get_house_name_in_japanese(self, name):
+        if name == 'Glyffindor':
+            house_name = 'グリフィンドール'
+        elif name == 'Hufflpuff':
+            house_name = 'ハッフルパフ'
+        elif name == 'Ravenclaw':
+            house_name = 'レイブンクロー'
+        elif name == 'Slytherin':
+            house_name = 'スリザリン'
+        return house_name
         
 if __name__ == '__main__':
     model_path = 'models/sorting_deep_hat.h5'

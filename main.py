@@ -101,33 +101,34 @@ def handle_content_message(event):
         img_path = os.path.join('static', 'tmp', img_name)
         os.rename(tf.name, img_path)
 
-    sdh.estimate(img_path)
+        sdh.estimate(img_path)
 
-    if len(sdh.result_data) == 0:
-        line_bot_api.reply_message(
-            event.reply_token, [
-                TextSendMessage(text='顔が大きく写る写真を使って、\n帽子をかぶりなおすのじゃ')
-            ])
-    else:
-        sdh.draw(img_path)
+        if len(sdh.result_data) == 0:
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text='顔が大きく写る写真を使って、\n帽子をかぶりなおすのじゃ')
+            ]   )
+        else:
+            sdh.draw(img_path)
 
-        img_url = request.host_url + img_path
-        img_url = 'https' + img_url[4:] # http -> https
+            house_names = ''
+            for (x, y, w, h, hn) in sdh.result_data:
+                house_names += sdh.get_house_name_in_japanese(hn)
+                house_names += '!\n'
 
-        line_bot_api.reply_message(
-            event.reply_token, [
-                #TextSendMessage(text='tempfile_path\n' + tempfile_path),
-                #TextSendMessage(text='dist_name\n' + dist_name),
-                TextSendMessage(text=img_path),
-                TextSendMessage(text=img_url),
-                #ImageSendMessage(original_content_url=img_path2, preview_image_url=img_path2),
+            img_url = request.host_url + img_path
+            img_url = 'https' + img_url[4:] # http -> https
+
+            line_bot_api.reply_message(
+                event.reply_token, [
+                TextSendMessage(text=house_names),
                 ImageSendMessage(original_content_url=img_url, preview_image_url=img_url)
             ])
 
 @handler.add(FollowEvent)
 def handle_follow(event):
     line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text='Got follow event'))
+        event.reply_token, TextSendMessage(text='フォローありがとうございます。\n顔が写っている画像を送ると、どの寮に入れるかが分かります！'))
 
 
 if __name__ == "__main__":
