@@ -89,20 +89,21 @@ def handle_content_message(event):
         return
 
     message_content = line_bot_api.get_message_content(event.message.id)
-    ext = 'jpg'
+    ext = '.jpg'
 	
     #Create the temp file to save the input file.
-    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
+    with tempfile.NamedTemporaryFile(dir=static_tmp_path, suffix='.jpg', delete=False) as input_img:
         for chunk in message_content.iter_content():
-            tf.write(chunk)
+            input_img.write(chunk)
 
-        tempfile_path = tf.name
-        dist_path = tf.name + '.' + ext
-        dist_name = os.path.basename(dist_path)
+        #tempfile_path = tf.name
+        #dist_path = tf.name + '.' + ext
+        #dist_name = os.path.basename(dist_path)
 
-        os.rename(tempfile_path, dist_path)
+        #os.rename(tempfile_path, dist_path)
 
-        sdh.estimate(os.path.join('static', 'tmp', dist_name))
+        #sdh.estimate(os.path.join('static', 'tmp', dist_name))
+        sdh.estimate(input_img.name)
 
         if len(sdh.result_data) == 0:
             line_bot_api.reply_message(
@@ -110,18 +111,22 @@ def handle_content_message(event):
                     TextSendMessage(text='顔が大きく写る写真を使って、\n帽子をかぶりなおすのじゃ')
                 ])
         else:
-            sdh.draw(os.path.join('static', 'tmp', dist_name))
-            img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
-            img_path = 'https' + img_path[4:] # http -> https
+            with tempfile.NamedTemporaryFile(dir=static_tmp_path, suffix='.jpg', delete=False) as output_img:
+                sdh.draw(output_img.name)
+                dist_name = os.path.basename(output_img.name)
+                img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
+                img_path = 'https' + img_path[4:] # http -> https
 
-            line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(text='tempfile_path\n' + tempfile_path),
-                    TextSendMessage(text='dist_path\n' + dist_path),
-                    TextSendMessage(text='dist_name\n' + dist_name),
-                    #TextSendMessage(text=t),
-                    ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
-                ])
+                line_bot_api.reply_message(
+                    event.reply_token, [
+                        #TextSendMessage(text='tempfile_path\n' + tempfile_path),
+                        #TextSendMessage(text='dist_path\n' + dist_path),
+                        #TextSendMessage(text='dist_name\n' + dist_name),
+                        TextSendMessage(text=input_img.name),
+                        TextSendMessage(text=output_img.name),
+                        TextSendMessage(text=img_path)
+                        #ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
+                    ])
 
 @handler.add(FollowEvent)
 def handle_follow(event):
