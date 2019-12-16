@@ -81,7 +81,7 @@ def callback():
 def handle_text_message(event):
     line_bot_api.reply_message(
         #event.reply_token, TextSendMessage(text=event.message.text)
-        event.reply_token, TextSendMessage(text='顔が写っている画像を送ると、どの寮に入れるか分かります！')
+        event.reply_token, TextSendMessage(text='顔が写っている画像を送ると、\nどの寮に入れるか分かります！')
         )
 
 # Other Message Type
@@ -133,7 +133,7 @@ def handle_content_message(event):
 def handle_follow(event):
     line_bot_api.reply_message(
         event.reply_token, TextSendMessage(text='フォローありがとうございます。\n\
-                                            顔が写っている画像を送ると、どの寮に入れるかが分かります！\
+                                            顔が写っている画像を送ると、\nどの寮に入れるかが分かります！\
                                             グリフィンドール・ハッフルパプ・レイブンクロー・スリザリン\n\
                                             あなたはどの寮に入るかな？'))
 
