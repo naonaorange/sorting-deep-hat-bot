@@ -97,10 +97,10 @@ def handle_content_message(event):
     
         dist_path = tf.name + '.jpg'
         dist_name = os.path.basename(dist_path)
+        dist_path = os.path.join('static', 'tmp', dist_name)
         os.rename(tf.name, dist_path)
 
     sdh.estimate(os.path.join('static', 'tmp', dist_name))
-    #sdh.estimate(input_img.name)
 
     if len(sdh.result_data) == 0:
         line_bot_api.reply_message(
