@@ -56,7 +56,7 @@ handler = WebhookHandler(channel_secret)
 
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
-sdh = sorting_deep_hat.sorting_deep_hat()
+sdh = sorting_deep_hat.sorting_deep_hat('models/sorting_deep_hat.h5')
 
 
 @app.route("/callback", methods=['POST'])
@@ -102,35 +102,17 @@ def handle_content_message(event):
 
         os.rename(tempfile_path, dist_path)
 
-        result = sdh.estimate(\
-            os.path.join('static', 'tmp', dist_name),\
-            os.path.join('static', 'tmp', dist_name))
+        sdh.estimate(os.path.join('static', 'tmp', dist_name))
 
-
-        if len(result) == 0:
+        if len(sdt.result_data) == 0:
             line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(text='顔が大きく写る写真を使って、\n帽子をかぶりなおすのじゃ')
                 ])
         else:
+            sdh.draw(os.path.join('static', 'tmp', dist_name))
             img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
             img_path = 'https' + img_path[4:] # http -> https
-    
-            t = ''
-            i = 0
-            for r in result:
-                if r[4] == 'Glyffindor':
-                    t += 'グリフィンドール !!'
-                elif r[4] == 'Hufflpuff':
-                    t += 'ハッフルパフ !!'
-                elif r[4] == 'Ravenclaw':
-                    t += 'レイブンクロー !!'
-                elif r[4] == 'Slytherin':
-                    t += 'スリザリン !!'
-            
-                if i < len(result) - 1:
-                    t += '\n'
-                i += 1
 
             line_bot_api.reply_message(
                 event.reply_token, [
@@ -148,7 +130,6 @@ def handle_follow(event):
 
 
 if __name__ == "__main__":
-    sdh.read_model('models/sorting_deep_hat.h5')
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
 #    app.run(host="127.0.0.1", port=port)
