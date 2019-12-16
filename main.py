@@ -119,7 +119,7 @@ def handle_content_message(event):
                     TextSendMessage(text='tempfile_path\n' + tempfile_path),
                     TextSendMessage(text='dist_path\n' + dist_path),
                     TextSendMessage(text='dist_name\n' + dist_name),
-                    TextSendMessage(text=t),
+                    #TextSendMessage(text=t),
                     ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
                 ])
 
