@@ -113,7 +113,7 @@ def handle_content_message(event):
         else:
             with tempfile.NamedTemporaryFile(dir=static_tmp_path, suffix='.jpg', delete=False) as output_img:
                 #sdh.draw(output_img.name)
-                #sdh.draw(os.path.join('static', 'tmp', dist_name))
+                sdh.draw(os.path.join('static', 'tmp', dist_name))
 
                 img_path = request.host_url + os.path.join('static', 'tmp', dist_name)
                 img_path = 'https' + img_path[4:] # http -> https
