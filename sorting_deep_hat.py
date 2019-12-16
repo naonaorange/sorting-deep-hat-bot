@@ -8,7 +8,8 @@ from PIL import Image, ImageDraw, ImageFont
 class sorting_deep_hat:
     def __init__(self, model_path):
         self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-        #self.model = models.load_model(model_path)
+        self.model = models.load_model(model_path)
+        #self.model_path = model_path
         self.font_size = 19
         self.rectangle_width = 5
         self.font = ImageFont.truetype('SourceHanSansJP-Bold.otf', self.font_size)
@@ -46,7 +47,7 @@ class sorting_deep_hat:
             in_data = cv2.merge([r,g,b])
             in_data = np.array([in_data / 255.])
 
-            self.model = models.load_model(model_path)
+            #self.model = models.load_model(self.model_path)
             index = np.argmax(self.model.predict(in_data))
 
             if index == 0:
