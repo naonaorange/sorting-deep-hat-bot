@@ -63,8 +63,8 @@ class sorting_deep_hat:
     
     def draw(self, output_image_path):
         #MatはRGB, PIL ImageはBGRのため要素の順番を変更
-        pil_image=Image.fromarray(self.image[:, :, ::-1].copy())
-        pil_draw = ImageDraw.Draw(pil_image)
+        #pil_image=Image.fromarray(self.image[:, :, ::-1].copy())
+        #pil_draw = ImageDraw.Draw(pil_image)
 
         for (x, y, w, h, hn) in self.result_data:
             color = ()
@@ -81,20 +81,24 @@ class sorting_deep_hat:
                 color = 'green'
                 house_name = 'スリザリン'
 
-            pil_draw.rectangle([(x, y), (x+w, y+h)], outline=color,  width=self.rectangle_width)
+            #pil_draw.rectangle([(x, y), (x+w, y+h)], outline=color,  width=self.rectangle_width)
             
             #文字が矩形と重なってしまうため、矩形の幅と文字の大きさを考慮して位置を決定
-            text_draw_y = y - self.font_size - self.rectangle_width - 1 
-            if text_draw_y < 0:
-                text_draw_y = 0
-            pil_draw.text((x, text_draw_y), house_name, fill=color, font=self.font)
+            #text_draw_y = y - self.font_size - self.rectangle_width - 1 
+            #if text_draw_y < 0:
+            #    text_draw_y = 0
+            #pil_draw.text((x, text_draw_y), house_name, fill=color, font=self.font)
+
+            cv2.rectangle(self.image, (x, y), (x + w, y + h), (0,0,255), 2)
+            cv2.putText(self.image, house_name, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,255), 4)
         
-        pil_image.save(output_image_path)
-        pil_image.close()
+        #pil_image.save(output_image_path)
+        #pil_image.close()
 
         #cv2.rectangle(self.image, (x, y), (x + w, y + h), color, 2)
         #cv2.putText(self.image, house_name, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, color, 4)
         #cv2.imwrite(output_image_path, self.image)
+        cv2.imwrite(output_image_path, self.image)
         
 if __name__ == '__main__':
     model_path = 'models/sorting_deep_hat.h5'
