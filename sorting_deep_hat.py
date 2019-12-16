@@ -32,7 +32,7 @@ class sorting_deep_hat:
         self.result_data = []
         for (x, y, w, h) in faces:
             #既に検出された顔領域内に顔が検出された場合は除外
-            for (xx, yy, ww, hh) in self.result_data:
+            for (xx, yy, ww, hh, hhnn) in self.result_data:
                 if xx < x and x < xx + ww:
                     if yy < y and y < yy + hh:
                         continue
@@ -95,7 +95,6 @@ class sorting_deep_hat:
             #cv2.putText(self.image, house_name, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, color, 4)
         
         pil_image.save(output_image_path)
-        pil_image.close()
 
         #cv2.imwrite(output_image_path, self.image)
     
