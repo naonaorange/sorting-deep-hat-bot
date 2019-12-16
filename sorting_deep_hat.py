@@ -10,9 +10,9 @@ class sorting_deep_hat:
         self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         self.model = models.load_model(model_path)
         #self.model_path = model_path
-        self.font_size = 19
-        self.rectangle_width = 5
-        self.font = ImageFont.truetype('SourceHanSansJP-Bold.otf', self.font_size)
+        #self.font_size = 19
+        #self.rectangle_width = 5
+        #self.font = ImageFont.truetype('SourceHanSansJP-Bold.otf', self.font_size)
 
     def release_internal_data(self):
         if self.image is not None:
@@ -68,20 +68,28 @@ class sorting_deep_hat:
 
         for (x, y, w, h, house_name) in self.result_data:
             if house_name == 'Glyffindor':
-                color = (0, 0, 255)
+                color = 'red'
             elif house_name == 'Hufflpuff':
-                color = (0, 255, 255)
+                color = 'orange'
             elif house_name == 'Ravenclaw':
-                color = (255, 0, 0)
+                color = 'blue'
             elif house_name == 'Slytherin':
-                color = (0, 255, 0)
+                color = 'green'
 
-            pil_draw.rectangle([(x, y), (x+w, y+h)], outline=color,  width=self.rectangle_width)
+            rectangle_width = 5
+            pil_draw.rectangle([(x, y), (x+w, y+h)], outline=color,  width=rectangle_width)
+
+            #矩形の横幅の長さに文字が収まるようにフォントサイズを調整
+            font_size = w // 8 #グリフィンドールが8文字
+            if font_size < 10:
+                font_size = 10
+            font = ImageFont.truetype('SourceHanSansJP-Bold.otf', font_size)
+
             #文字が矩形と重なってしまうため、矩形の幅と文字の大きさを考慮して位置を決定
-            text_draw_y = y - self.font_size - self.rectangle_width - 1 
+            text_draw_y = y - font_size - rectangle_width - 1 
             if text_draw_y < 0:
                 text_draw_y = 0
-            pil_draw.text((x, text_draw_y), 'あああ', fill=color, font=self.font)
+            pil_draw.text((x, text_draw_y), self.get_house_name_in_japanese(house_name), fill=color, font=font)
 
             #cv2.rectangle(self.image, (x, y), (x + w, y + h), color, 2)
             #cv2.putText(self.image, house_name, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, color, 4)
