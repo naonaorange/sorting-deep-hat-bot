@@ -80,7 +80,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text=event.message.text+'\nv1.0'))
+        event.reply_token, TextSendMessage(text=event.message.text))
 
 # Other Message Type
 @handler.add(MessageEvent, message=ImageMessage)
@@ -89,18 +89,15 @@ def handle_content_message(event):
         return
 
     message_content = line_bot_api.get_message_content(event.message.id)
-    ext = '.jpg'
 	
     #Create the temp file to save the input file.
-    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
+    with tempfile.NamedTemporaryFile(dir=static_tmp_path, delete=False) as tf:
         for chunk in message_content.iter_content():
             tf.write(chunk)
-
-        tempfile_path = tf.name
     
-    dist_path = tempfile_path + '.' + ext
-    dist_name = os.path.basename(dist_path)
-    os.rename(tempfile_path, dist_path)
+        dist_path = tf.name + '.jpg'
+        dist_name = os.path.basename(dist_path)
+        os.rename(tf.name, dist_path)
 
     sdh.estimate(os.path.join('static', 'tmp', dist_name))
     #sdh.estimate(input_img.name)
@@ -122,7 +119,7 @@ def handle_content_message(event):
                 #TextSendMessage(text='tempfile_path\n' + tempfile_path),
                 TextSendMessage(text='dist_path\n' + dist_path),
                 #TextSendMessage(text='dist_name\n' + dist_name),
-                #TextSendMessage(text=input_img.name),
+                TextSendMessage(text=os.path.join('static', 'tmp', dist_name)),
                 TextSendMessage(text=img_path),
                 #ImageSendMessage(original_content_url=img_path2, preview_image_url=img_path2),
                 ImageSendMessage(original_content_url=img_path, preview_image_url=img_path)
