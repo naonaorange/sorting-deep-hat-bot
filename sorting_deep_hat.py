@@ -11,9 +11,6 @@ class sorting_deep_hat:
         self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         self.model = models.load_model(model_path)
         #self.model_path = model_path
-        #self.font_size = 19
-        #self.rectangle_width = 5
-        #self.font = ImageFont.truetype('SourceHanSansJP-Bold.otf', self.font_size)
 
     def release_internal_data(self):
         if self.image is not None:
@@ -33,19 +30,19 @@ class sorting_deep_hat:
 
         self.result_data = []
         for (x, y, w, h) in faces:
-            isDetectedOk = True
+            is_detected = True
             #既に検出された顔領域内に顔が検出された場合は除外
             for (xx, yy, ww, hh, hhnn) in self.result_data:
                 if xx < x and x < xx + ww:
                     if yy < y and y < yy + hh:
-                        isDetectedOk = False
+                        is_detected = False
                         break
                 if xx < x + w and x + w < xx + ww:
                     if yy < y + h and y + h < yy + hh:
-                        isDetectedOk = False
+                        is_detected = False
                         break
 
-            if isDetectedOk == True:
+            if is_detected == True:
                 face_image = self.image[y:y+h, x:x+w]
                 face_image = cv2.resize(face_image, (100, 100))
         
