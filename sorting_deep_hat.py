@@ -83,7 +83,7 @@ class sorting_deep_hat:
             font_size = w // 8 #グリフィンドールが8文字
             if font_size < 15:
                 font_size = 15
-            font = ImageFont.truetype('SourceHanSansJP-Bold.otf', font_size)
+            font = ImageFont.truetype('SourceHanSansJP-Bold-Wo-Kanji.otf', font_size)
 
             #文字が矩形と重なってしまうため、矩形の幅と文字の大きさを考慮して位置を決定
             text_draw_y = y - font_size - rectangle_width - 1 
