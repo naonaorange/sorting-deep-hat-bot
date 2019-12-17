@@ -89,11 +89,11 @@ class sorting_deep_hat:
                 font_size = 10
             font = ImageFont.truetype('SourceHanSansJP-Bold-Wo-Kanji.otf', font_size)
 
-            #矩形の下に文字を描画、描画範囲が画像外にならないように調整
+            #矩形の下に文字を描画、文字の背景を描画
+            #font sizeの高さとのずれがあるため*1.3の領域を背景とする
             text_draw_y = y + h
-            if text_draw_y > self.image.shape[1] - font_size:
-                text_draw_y = self.image.shape[1] - font_size
-            #文字の背景を描画、font sizeの高さとのずれがあるため*1.3の領域を背景とする
+            if text_draw_y > self.image.shape[1] - font_size * 1.3:
+                text_draw_y = self.image.shape[1] - font_size * 1.3
             pil_draw.rectangle([(x, y+h), \
                                 (x+w, text_draw_y+font_size*1.3)],\
                                 fill='white',\
