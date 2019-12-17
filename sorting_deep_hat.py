@@ -28,7 +28,7 @@ class sorting_deep_hat:
         faces = self.face_cascade.detectMultiScale(gray,\
                                                     scaleFactor= 1.11,\
                                                     minNeighbors= 4,\
-                                                    minSize=(self.image.width // 8, self.image.height // 8)\
+                                                    minSize=(self.image_width // 8, self.image_height // 8)\
                                                     )
 
         self.result_data = []
@@ -94,8 +94,8 @@ class sorting_deep_hat:
             #矩形の下に文字を描画、文字の背景を描画
             #font sizeの高さとのずれがあるため*1.3の領域を背景とする
             text_draw_y = y + h
-            if text_draw_y > math.floor(self.image.height - font_size * 1.3):
-                text_draw_y = math.floor(self.image.height - font_size * 1.3)
+            if text_draw_y > math.floor(self.image_height - font_size * 1.3):
+                text_draw_y = math.floor(self.image_height - font_size * 1.3)
             pil_draw.rectangle([(x, y+h), \
                                 (x+w, text_draw_y+font_size*1.3)],\
                                 fill='white',\
