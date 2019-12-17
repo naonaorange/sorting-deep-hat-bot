@@ -31,35 +31,39 @@ class sorting_deep_hat:
 
         self.result_data = []
         for (x, y, w, h) in faces:
+            isDetectedOk = True
             #既に検出された顔領域内に顔が検出された場合は除外
             for (xx, yy, ww, hh, hhnn) in self.result_data:
                 if xx < x and x < xx + ww:
                     if yy < y and y < yy + hh:
-                        continue
+                        isDetectedOk = False
+                        break
                 if xx < x + w and x + w < xx + ww:
                     if yy < y + h and y + h < yy + hh:
-                        continue
+                        isDetectedOk = False
+                        break
 
-            face_image = self.image[y:y+h, x:x+w]
-            face_image = cv2.resize(face_image, (100, 100))
-    
-            b,g,r = cv2.split(face_image)
-            in_data = cv2.merge([r,g,b])
-            in_data = np.array([in_data / 255.])
+            if isDetectedOk == True:
+                face_image = self.image[y:y+h, x:x+w]
+                face_image = cv2.resize(face_image, (100, 100))
+        
+                b,g,r = cv2.split(face_image)
+                in_data = cv2.merge([r,g,b])
+                in_data = np.array([in_data / 255.])
 
-            #self.model = models.load_model(self.model_path)
-            index = np.argmax(self.model.predict(in_data))
+                #self.model = models.load_model(self.model_path)
+                index = np.argmax(self.model.predict(in_data))
 
-            if index == 0:
-                house_name = 'Glyffindor'
-            elif index == 1:
-                house_name = 'Hufflpuff'
-            elif index == 2:
-                house_name = 'Ravenclaw'
-            elif index == 3:
-                house_name = 'Slytherin'
+                if index == 0:
+                    house_name = 'Glyffindor'
+                elif index == 1:
+                    house_name = 'Hufflpuff'
+                elif index == 2:
+                    house_name = 'Ravenclaw'
+                elif index == 3:
+                    house_name = 'Slytherin'
 
-            self.result_data.append([x, y, w, h, house_name])
+                self.result_data.append([x, y, w, h, house_name])
     
     def draw(self, output_image_path):
         #MatはRGB, PIL ImageはBGRのため要素の順番を変更
