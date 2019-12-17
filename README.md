@@ -6,7 +6,6 @@ This program is supported Heroku web server.
 # Environment
 
 - Python 3.6
-- Tensorflow 1.5
-- Keras 2.1.5
-- OpenCV 3.4
+- Tensorflow 2.0
+- OpenCV
 - LINE Bot API
