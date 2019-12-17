@@ -85,21 +85,25 @@ class sorting_deep_hat:
 
             #矩形の横幅の長さに文字が収まるようにフォントサイズを調整
             font_size = w // 8 #グリフィンドールが8文字
-            if font_size < 15:
-                font_size = 15
+            if font_size < 10:
+                font_size = 10
             font = ImageFont.truetype('SourceHanSansJP-Bold-Wo-Kanji.otf', font_size)
 
-            #文字が矩形と重なってしまうため、矩形の幅と文字の大きさを考慮して位置を決定
-            text_draw_y = y - font_size - rectangle_width - 1 
-            if text_draw_y < 0:
-                text_draw_y = 0
+            #矩形の下に文字を描画、描画範囲が画像外にならないように調整
+            text_draw_y = y + h
+            if text_draw_y > self.image.shape[1] - font_size:
+                text_draw_y = self.image.shape[1] - font_size
+            #文字の背景を描画、font sizeの高さとのずれがあるため*1.3の領域を背景とする
+            pil_draw.rectangle([(x, y+h), \
+                                (x+w, text_draw_y+font_size*1.3)],\
+                                fill='white',\
+                                outline='white',\
+                                width=rectangle_width)
             pil_draw.text((x, text_draw_y), self.get_house_name_in_japanese(house_name), fill=color, font=font)
-
             #cv2.rectangle(self.image, (x, y), (x + w, y + h), color, 2)
             #cv2.putText(self.image, house_name, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, color, 4)
         
         pil_image.save(output_image_path)
-
         #cv2.imwrite(output_image_path, self.image)
     
     def get_house_name_in_japanese(self, name):
