@@ -133,11 +133,7 @@ def handle_content_message(event):
 
 @handler.add(FollowEvent)
 def handle_follow(event):
-    line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text='フォローありがとうございます。\n\
-                                            顔が写っている画像を送ると、\nどの寮に入れるかが分かります！\
-                                            グリフィンドール・ハッフルパプ・レイブンクロー・スリザリン\n\
-                                            あなたはどの寮に入るかな？'))
+    pass
 
 
 if __name__ == "__main__":
