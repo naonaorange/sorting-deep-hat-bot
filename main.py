@@ -104,6 +104,8 @@ def handle_content_message(event):
             img_path = os.path.join('static', 'tmp', img_name)
             os.rename(tf.name, img_path)
 
+        is_input_message_ok = True
+
     #Execute sorting
     if is_input_message_ok == True:     
         sdh.estimate(img_path)
