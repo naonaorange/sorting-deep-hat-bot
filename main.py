@@ -108,7 +108,7 @@ def handle_text_message(event):
 #
 #                   is_input_message_ok = True
                 except Exception as ex:
-                    img_path = "exception!"
+                    img_path = str(ex)
 
     #Execute sorting
     if is_input_message_ok == True:
