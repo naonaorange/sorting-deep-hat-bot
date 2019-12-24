@@ -92,8 +92,8 @@ def handle_text_message(event):
         if len(url) > 8:
             if url[:8] == "https://" or url[:7] == "http://":
                 try:
-                    res = requests.get(url)
-                    res.raise_for_status()
+                    #res = requests.get(url)
+                    #res.raise_for_status()
 #                    content_type = res.headers['content-type']
 #                    if 'image' in content_type:
 #                        ext = mimetypes.guess_extension(content_type)
@@ -117,8 +117,8 @@ def handle_text_message(event):
     else:
         line_bot_api.reply_message(
             event.reply_token, [
-                TextSendMessage(text=str(url)),
-                TextSendMessage(text=str(img_path)),
+                #TextSendMessage(text=str(url)),
+                #TextSendMessage(text=str(img_path)),
                 TextSendMessage(text='別の画像を送ってください。')
         ]   )
 
