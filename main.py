@@ -54,6 +54,7 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
+static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 sdh = sorting_deep_hat.sorting_deep_hat('models/sorting_deep_hat.h5')
 
 
