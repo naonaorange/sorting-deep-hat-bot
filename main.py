@@ -116,6 +116,9 @@ def handle_text_message(event):
     else:
         line_bot_api.reply_message(
             event.reply_token, [
+                TextSendMessage(text=url),
+                TextSendMessage(text=img_path),
+                TextSendMessage(text=ext),
                 TextSendMessage(text='別の画像を送ってください。')
         ]   )
 
