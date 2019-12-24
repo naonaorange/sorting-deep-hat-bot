@@ -111,7 +111,7 @@ def handle_text_message(event):
 
     #Execute sorting
     if is_input_message_ok == True:
-        execute(img_path)
+        execute(event, img_path)
     
     else:
         line_bot_api.reply_message(
@@ -144,7 +144,7 @@ def handle_content_message(event):
 
     #Execute sorting
     if is_input_message_ok == True:     
-        execute(img_path)
+        execute(event, img_path)
     
     else:
         line_bot_api.reply_message(
@@ -156,7 +156,7 @@ def handle_content_message(event):
 def handle_follow(event):
     pass
 
-def execute(img_path):
+def execute(event, img_path):
     sdh.estimate(img_path)
 
     #Can not detect the face
