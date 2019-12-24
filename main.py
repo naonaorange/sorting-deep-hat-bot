@@ -89,26 +89,26 @@ def handle_text_message(event):
         url = event.message.text
 
         #Check the input message
-#        if len(url) > 8:
-#            if url[:8] == "https://" or url[:7] == "http://":
-#                try:
-#                    res = requests.get(url)
-#                    res.raise_for_status()
-#                    content_type = res.headers['content-type']
-#                    if 'image' in content_type:
-#                        ext = mimetypes.guess_extension(content_type)
-#                        if ext == ".bmp" or ext == ".jpe" or ext == ".jpeg" or ext ==".jpg" or ext == ".png" or ext == ".tiff" or ext == ".tif":
-#                            #Create the temp file to save the input file.
-#                            with tempfile.NamedTemporaryFile(dir=static_tmp_path, delete=False) as tf:
-#                                tf.write(res.content)
-#
-#                            img_name = os.path.basename(tf.name) + ext
-#                            img_path = os.path.join('static', 'tmp', img_name)
-#                            os.rename(tf.name, img_path)
+        if len(url) > 8:
+            if url[:8] == "https://" or url[:7] == "http://":
+                try:
+                    res = requests.get(url)
+                    res.raise_for_status()
+                    content_type = res.headers['content-type']
+                    if 'image' in content_type:
+                        ext = mimetypes.guess_extension(content_type)
+                        if ext == ".bmp" or ext == ".jpe" or ext == ".jpeg" or ext ==".jpg" or ext == ".png" or ext == ".tiff" or ext == ".tif":
+                            #Create the temp file to save the input file.
+                            with tempfile.NamedTemporaryFile(dir=static_tmp_path, delete=False) as tf:
+                                tf.write(res.content)
+
+                            img_name = os.path.basename(tf.name) + ext
+                            img_path = os.path.join('static', 'tmp', img_name)
+                            os.rename(tf.name, img_path)
 #
 #                   is_input_message_ok = True
-#                except Exception as ex:
-#                    pass
+                except Exception as ex:
+                    pass
 
     #Execute sorting
     if is_input_message_ok == True:
@@ -118,7 +118,7 @@ def handle_text_message(event):
         line_bot_api.reply_message(
             event.reply_token, [
                 TextSendMessage(text=str(url)),
-                #TextSendMessage(text=str(img_path)),
+                TextSendMessage(text=str(img_path)),
                 TextSendMessage(text='別の画像を送ってください。')
         ]   )
 
