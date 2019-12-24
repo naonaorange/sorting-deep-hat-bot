@@ -118,7 +118,6 @@ def handle_text_message(event):
             event.reply_token, [
                 TextSendMessage(text=url),
                 TextSendMessage(text=img_path),
-                TextSendMessage(text=ext),
                 TextSendMessage(text='別の画像を送ってください。')
         ]   )
 
