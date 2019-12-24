@@ -54,8 +54,6 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
-
 sdh = sorting_deep_hat.sorting_deep_hat('models/sorting_deep_hat.h5')
 
 
@@ -79,15 +77,52 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
-    line_bot_api.reply_message(
-        #event.reply_token, TextSendMessage(text=event.message.text)
-        event.reply_token, TextSendMessage(text='顔が写っている画像を送ると、\nどの寮に入れるか分かります！')
-        )
+    is_input_message_ok = False
+    img_path = ''
+
+    #Check the input message
+    if not isinstance(event.message, TextMessage):
+        pass
+    else:
+        url = event.message.text
+
+        #Check the input message
+        if len(url) > 8:
+            if url[:8] == "https://" or url[:7] == "http://":
+                try:
+                    res = requests.get(url)
+                    res.raise_for_status()
+                    content_type = res.headers['content-type']
+                    if 'image' in content_type:
+                        ext = mimetypes.guess_extension(content_type)
+                        if ext == ".bmp" or ext == ".jpe" or ext == ".jpeg" or ext ==".jpg" or ext == ".png" or ext == ".tiff" or ext == ".tif":
+                            #Create the temp file to save the input file.
+                            with tempfile.NamedTemporaryFile(dir=static_tmp_path, delete=False) as tf:
+                                tf.write(res.content)
+
+                            img_name = os.path.basename(tf.name) + ext
+                            img_path = os.path.join('static', 'tmp', img_name)
+                            os.rename(tf.name, img_path)
+
+                            is_input_message_ok = True
+                except Exception as ex:
+                    pass
+
+    #Execute sorting
+    if is_input_message_ok == True:
+        execute(img_path)
+    
+    else:
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text='別の画像を送ってください。')
+        ]   )
 
 # Other Message Type
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_content_message(event):
     is_input_message_ok = False
+    img_path = ''
 
     #Check the input message
     if not isinstance(event.message, ImageMessage):
@@ -108,36 +143,7 @@ def handle_content_message(event):
 
     #Execute sorting
     if is_input_message_ok == True:     
-        sdh.estimate(img_path)
-
-        #Can not detect the face
-        if len(sdh.result_data) == 0:
-            line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(text='別の画像を送ってください。\n例えば、写っている顔が小さい場合は判断できない場合があります。')
-            ]   )
-        else:
-            sdh.draw(img_path)
-
-            house_names = ''
-            i = 0
-            for (x, y, w, h, hn) in sdh.result_data:
-                house_names += sdh.get_house_name_in_japanese(hn)
-                house_names += ' !'
-                if i < len(sdh.result_data) - 1:
-                    house_names += '\n'
-                i += 1
-
-            img_url = request.host_url + img_path
-            img_url = 'https' + img_url[4:] # http -> https
-
-            line_bot_api.reply_message(
-                event.reply_token, [
-                TextSendMessage(text=house_names),
-                ImageSendMessage(original_content_url=img_url, preview_image_url=img_url)
-            ])
-            
-        sdh.release_internal_data()
+        execute(img_path)
     
     else:
         line_bot_api.reply_message(
@@ -148,6 +154,39 @@ def handle_content_message(event):
 @handler.add(FollowEvent)
 def handle_follow(event):
     pass
+
+def execute(img_path):
+    sdh.estimate(img_path)
+
+    #Can not detect the face
+    if len(sdh.result_data) == 0:
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text='別の画像を送ってください。\n例えば、写っている顔が小さい場合は判断できない場合があります。')
+        ]   )
+    else:
+        sdh.draw(img_path)
+
+        house_names = ''
+        i = 0
+        for (x, y, w, h, hn) in sdh.result_data:
+            house_names += sdh.get_house_name_in_japanese(hn)
+            house_names += ' !'
+            if i < len(sdh.result_data) - 1:
+                house_names += '\n'
+            i += 1
+
+        img_url = request.host_url + img_path
+        img_url = 'https' + img_url[4:] # http -> https
+
+        line_bot_api.reply_message(
+            event.reply_token, [
+            TextSendMessage(text=house_names),
+            ImageSendMessage(original_content_url=img_url, preview_image_url=img_url)
+        ])
+        
+    sdh.release_internal_data()
+
 
 
 if __name__ == "__main__":
