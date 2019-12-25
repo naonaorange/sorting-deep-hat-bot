@@ -37,6 +37,7 @@ from linebot.models import (
 import sorting_deep_hat
 import time
 import requests
+import mimetypes
 
 app = Flask(__name__)
 
