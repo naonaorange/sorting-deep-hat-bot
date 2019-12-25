@@ -107,7 +107,7 @@ def handle_text_message(event):
                             img_path = os.path.join('static', 'tmp', img_name)
                             os.rename(tf.name, img_path)
 
-                   is_input_message_ok = True
+                            is_input_message_ok = True
                 except Exception as ex:
                     img_path = str(ex)
 
