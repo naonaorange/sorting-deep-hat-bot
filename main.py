@@ -82,7 +82,7 @@ def callback():
 def handle_text_message(event):
     is_input_message_ok = False
     url = ""
-    img_path = "init"
+    img_path = ""
 
     #Check the input message
     if not isinstance(event.message, TextMessage):
@@ -110,7 +110,7 @@ def handle_text_message(event):
 
                             is_input_message_ok = True
                 except Exception as ex:
-                    img_path = str(ex)
+                    pass
 
     #Execute sorting
     if is_input_message_ok == True:
@@ -119,9 +119,7 @@ def handle_text_message(event):
     else:
         line_bot_api.reply_message(
             event.reply_token, [
-                TextSendMessage(text=str(url)),
-                TextSendMessage(text=str(img_path)),
-                TextSendMessage(text='別の画像を送ってください。')
+                TextSendMessage(text='画像のURLを送ってください。')
         ]   )
 
 # Other Message Type
