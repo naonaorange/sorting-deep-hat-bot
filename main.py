@@ -108,14 +108,12 @@ def handle_text_message(event):
                             img_name = os.path.basename(tf.name) + ext
                             img_path = os.path.join('static', 'tmp', img_name)
                             os.rename(tf.name, img_path)
+                            is_input_message_ok = True
                         else:
                             debug_msg = "the extension is not image."
-
                     else:
                         debug_msg = "content_type is not image."
 
-
-                            is_input_message_ok = True
                 except Exception as ex:
                     debug_msg = str(ex)
                     #pass
