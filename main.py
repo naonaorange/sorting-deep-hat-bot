@@ -83,6 +83,7 @@ def handle_text_message(event):
     is_input_message_ok = False
     url = ""
     img_path = ""
+    debug_msg = ""
 
     #Check the input message
     if not isinstance(event.message, TextMessage):
@@ -107,10 +108,17 @@ def handle_text_message(event):
                             img_name = os.path.basename(tf.name) + ext
                             img_path = os.path.join('static', 'tmp', img_name)
                             os.rename(tf.name, img_path)
+                        else:
+                            debug_msg = "the extension is not image."
+
+                    else:
+                        debug_msg = "content_type is not image."
+
 
                             is_input_message_ok = True
                 except Exception as ex:
-                    pass
+                    debug_msg = str(ex)
+                    #pass
 
     #Execute sorting
     if is_input_message_ok == True:
@@ -119,6 +127,7 @@ def handle_text_message(event):
     else:
         line_bot_api.reply_message(
             event.reply_token, [
+                TextSendMessage(text=debug_msg),
                 TextSendMessage(text='画像のURLを送ってください。')
         ]   )
 
