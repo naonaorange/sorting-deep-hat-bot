@@ -125,7 +125,7 @@ def handle_text_message(event):
     else:
         line_bot_api.reply_message(
             event.reply_token, [
-                #TextSendMessage(text=debug_msg),
+                TextSendMessage(text=debug_msg),
                 TextSendMessage(text='画像のURLを送ってください。')
         ]   )
 
