@@ -83,7 +83,7 @@ def handle_text_message(event):
     is_input_message_ok = False
     url = ""
     img_path = ""
-    debug_msg = ""
+    fail_msg = ""
 
     #Check the input message
     if not isinstance(event.message, TextMessage):
@@ -91,13 +91,12 @@ def handle_text_message(event):
     else:
         url = event.message.text
 
+
         #Check the input message
         if len(url) > 8:
             if url[:8] == "https://" or url[:7] == "http://":
                 try:
-                    user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
-                    headers = {'User-Agent': user_agent}
-                    res = requests.get(url, headers = headers)
+                    res = requests.get(url)
                     res.raise_for_status()
                     content_type = res.headers['content-type']
                     if 'image' in content_type:
@@ -111,13 +110,9 @@ def handle_text_message(event):
                             img_path = os.path.join('static', 'tmp', img_name)
                             os.rename(tf.name, img_path)
                             is_input_message_ok = True
-                        else:
-                            debug_msg = "the extension is not image."
-                    else:
-                        debug_msg = "content_type is not image."
 
                 except Exception as ex:
-                    debug_msg = str(ex)
+                    fail_msg = "URLから画像を取得できません。\n画像を送信してください。"
                     #pass
 
     #Execute sorting
@@ -125,10 +120,11 @@ def handle_text_message(event):
         execute(event, img_path)
     
     else:
+        if fail_msg == "":
+            fail_msg = "画像を送信してください。"
         line_bot_api.reply_message(
             event.reply_token, [
-                TextSendMessage(text=debug_msg),
-                TextSendMessage(text='画像のURLを送ってください。')
+                TextSendMessage(text=fail_msg)
         ]   )
 
 # Other Message Type
