@@ -95,7 +95,9 @@ def handle_text_message(event):
         if len(url) > 8:
             if url[:8] == "https://" or url[:7] == "http://":
                 try:
-                    res = requests.get(url)
+                    user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
+                    headers = {'User-Agent': user_agent}
+                    res = requests.get(url, headers = headers)
                     res.raise_for_status()
                     content_type = res.headers['content-type']
                     if 'image' in content_type:
